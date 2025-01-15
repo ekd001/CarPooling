@@ -1,4 +1,4 @@
-package tg.ulcrsandroid.carpooling
+package tg.ulcrsandroid.carpooling.faetures.authentication.ui
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -9,10 +9,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import tg.ulcrsandroid.carpooling.R
 
 class InscriptionActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
