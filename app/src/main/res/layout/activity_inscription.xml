@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvSignUpTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textColor="#4A4A4A"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Email Input -->
+        <EditText
+            android:id="@+id/email_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="E-mail"
+            android:background="@drawable/rounded_input"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textEmailAddress" />
+
+        <!-- Password Input -->
+        <EditText
+            android:id="@+id/password_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:background="@drawable/rounded_input"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textPassword" />
+
+        <!-- Confirm Password Input -->
+        <EditText
+            android:id="@+id/confirm_password_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Confirm Password"
+            android:background="@drawable/rounded_input"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp"
+            android:inputType="textPassword" />
+
+        <!-- Selection: Passager or Conducteur -->
+        <TextView
+            android:id="@+id/tvRoleSelection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I am a:"
+            android:textColor="#4A4A4A"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/rgRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/rbPassenger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Passenger"
+                android:buttonTint="#FF4081"
+                android:textColor="#4A4A4A"
+                android:layout_marginEnd="16dp" />
+
+            <RadioButton
+                android:id="@+id/rbDriver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Driver"
+                android:buttonTint="#FF4081"
+                android:textColor="#4A4A4A" />
+        </RadioGroup>
+
+        <!-- Driver License Input (Hidden by Default) -->
+        <EditText
+            android:id="@+id/etDriverLicense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Driver's License ID"
+            android:background="@drawable/rounded_input"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone"
+            android:inputType="text" />
+
+        <!-- Sign Up Button -->
+        <Button
+            android:id="@+id/signup_button"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/gradient_button"
+            android:padding="16dp"
+            android:text="Sign Up"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <!-- Or Sign Up With -->
+        <TextView
+            android:id="@+id/tvOrSignUpWith"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Or sign up with"
+            android:textColor="#B0B0B0"
+            android:textStyle="italic"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Google Sign-Up Button -->
+        <Button
+            android:id="@+id/btnGoogleSignUp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Sign Up with Google"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/gradient_button"
+            android:drawableStart="@drawable/ic_google"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Already Have an Account -->
+        <TextView
+            android:id="@+id/tvAlreadyAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account? Log In"
+            android:textColor="#FF4081"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+</ScrollView>
