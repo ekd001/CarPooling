@@ -40,7 +40,7 @@
                 android:layout_marginEnd="9dp"
                 android:src="@drawable/email_icon" />
             <EditText
-                android:id="@+id/emailInput"
+                android:id="@+id/email_field"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -66,7 +66,7 @@
                 android:src="@drawable/password_icon" />
 
             <EditText
-                android:id="@+id/passwordInput"
+                android:id="@+id/password_field"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -92,7 +92,7 @@
                 android:src="@drawable/password_icon" />
 
             <EditText
-                android:id="@+id/conpasswordInput"
+                android:id="@+id/confirm_password_field"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -103,6 +103,7 @@
                 android:paddingStart="8dp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/choiceRole"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -155,7 +156,7 @@
 
         <!-- Sign Up Button -->
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/signup_button"
             android:layout_width="238dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -195,7 +196,7 @@
 
         <!-- Google Sign-Up Button -->
         <LinearLayout
-            android:id="@+id/socialLoginButton"
+            android:id="@+id/btnGoogleSignUp"
             android:layout_width="167dp"
             android:layout_height="66dp"
             android:layout_marginTop="15dp"
@@ -224,7 +225,7 @@
 
         <!-- Already Have an Account -->
         <TextView
-            android:id="@+id/registerText"
+            android:id="@+id/tvAlreadyAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/deja_compte_connexion"
