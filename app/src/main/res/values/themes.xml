@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.CarPooling" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/mainColor</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/mainColor</item>
+        <item name="android:windowBackground">@color/mainColor</item>
+    </style>
+
+    <style name="Theme.CarPooling" parent="Base.Theme.CarPooling" />
+</resources>

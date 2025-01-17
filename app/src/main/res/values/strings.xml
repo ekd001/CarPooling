@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">CarPooling</string>
+    <string name="bienvenue">Bienvenue</string>
+    <string name="se_connecter">Se connecter</string>
+    <string name="mot_de_passe_oubli">Mot de passe oublié ?</string>
+    <string name="email">Email</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="se_connecter_avec">Se connecter avec</string>
+    <string name="je_n_ai_pas_de_compte_s_inscrire">Je n\'ai pas de compte ? S\'inscrire</string>
+    <string name="inscription_text">Inscrivez-vous</string>
+    <string name="confirmation_password">Confirmez le mot de passe</string>
+    <string name="sinscrire_avec">S\'inscrire avec</string>
+    <string name="valider">valider</string>
+    <string name="deja_compte_connexion">Vous avez deja un compte ? Connectez-vous</string>
+</resources>

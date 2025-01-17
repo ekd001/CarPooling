@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "106108027983",
+    "project_id": "car-spooling",
+    "storage_bucket": "car-spooling.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106108027983:android:e8d659a74b6b468daf563a",
+        "android_client_info": {
+          "package_name": "tg.ulcrsandroid.carspooling"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD1tAMdH-2gwj_ooA_-JYXudS_wmeHRh4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
