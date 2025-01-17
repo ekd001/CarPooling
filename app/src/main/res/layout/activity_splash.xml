@@ -11,7 +11,7 @@
         android:id="@+id/logo"
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:src="@drawable/google_icon"
+        android:src="@drawable/logo_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/appName"
         app:layout_constraintStart_toStartOf="parent"

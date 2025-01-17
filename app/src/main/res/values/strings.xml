@@ -12,4 +12,9 @@
     <string name="sinscrire_avec">S\'inscrire avec</string>
     <string name="valider">valider</string>
     <string name="deja_compte_connexion">Vous avez deja un compte ? Connectez-vous</string>
+    <string name="reservation">reservation</string>
+    <string name="profil">Profil</string>
+    <string name="recherche">Recherche</string>
+    <string name="accueil">Accueil</string>
+    <string name="rechercher_un_endroit">Rechercher un endroit</string>
 </resources>

@@ -25,8 +25,8 @@ class InscriptionActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_inscription)
-        emailEditText = findViewById(R.id.email_field)
+        /*setContentView(R.layout.activity_inscription)
+        emailEditText = findViewById(R.id.emailInput)
         passwordEditText = findViewById(R.id.password_field)
         confirmPasswordEditText = findViewById(R.id.confirm_password_field)
         signupButton = findViewById(R.id.signup_button)
@@ -56,10 +56,10 @@ class InscriptionActivity : AppCompatActivity() {
             val confirmPassword = confirmPasswordEditText.text.toString()
             if (password == confirmPassword) {
 
-            }else {
+            } else {
                 Toast.makeText(this, "Les mots de passe ne correspondent pas", Toast.LENGTH_SHORT).show()
             }
-        }
+        }*/
 
 
     }
