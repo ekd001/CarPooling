@@ -3,4 +3,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mainColor">#3579F4</color>
+
+
+    <!-- Couleur secondaire -->
+    <color name="secondaryColor">#2196F3</color> <!-- Exemple : Bleu -->
+
+    <!-- Couleur d'accent -->
+    <color name="accentColor">#FF9800</color> <!-- Exemple : Orange -->
+
+    <!-- Couleurs supplémentaires (si besoin) -->
+    <color name="backgroundColor">#FFFFFF</color> <!-- Exemple : Blanc -->
+    <color name="textColor">#000000</color> <!-- Exemple : Noir -->
 </resources>
