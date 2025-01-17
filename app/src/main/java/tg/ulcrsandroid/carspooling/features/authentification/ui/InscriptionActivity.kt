@@ -87,7 +87,8 @@ class InscriptionActivity : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }else {
-                Toast.makeText(this, "Les mots de passe ne correspondent pas", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Les mots de passe ne correspondent pas", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -108,9 +109,10 @@ class InscriptionActivity : AppCompatActivity() {
         val password = passwordEditText.text.toString()
         val confirmPassword = confirmPasswordEditText.text.toString()
 
-        if (isValidEmail(email) && password.isNotEmpty() &&
-            confirmPassword.isNotEmpty() &&
-            password == confirmPassword) {
+        if (isValidEmail(email)
+            && password.isNotEmpty()
+            && confirmPassword.isNotEmpty()
+            && password == confirmPassword) {
             signupButton.isEnabled = true
             signupButton.setBackgroundColor(Color.parseColor("#1e272e"))
         } else {
