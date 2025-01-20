@@ -51,4 +51,5 @@ dependencies {
     implementation("com.google.android.material:material:1.6.1")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
 }
