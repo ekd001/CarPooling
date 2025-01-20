@@ -1,16 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.gms.google-services")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
-    namespace = "tg.ulcrsandroid.carspooling"
+    namespace = "tg.ulcrsandroid.carpooling"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "tg.ulcrsandroid.carspooling"
-        minSdk = 34
+        applicationId = "tg.ulcrsandroid.carpooling"
+        minSdk = 30
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -51,8 +51,4 @@ dependencies {
     implementation("com.google.android.material:material:1.6.1")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
-    implementation("com.google.android.gms:play-services-auth:21.3.0")
 }
