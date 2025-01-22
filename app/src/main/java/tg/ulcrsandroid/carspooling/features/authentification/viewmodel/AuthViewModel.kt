@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import tg.ulcrsandroid.carspooling.core.models.UserModel
 import tg.ulcrsandroid.carspooling.core.utils.AuthManager
 import tg.ulcrsandroid.carspooling.core.utils.Constants
+import tg.ulcrsandroid.carspooling.core.utils.GlobalUser
 import tg.ulcrsandroid.carspooling.domain.usecases.authentification.LoginUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.authentification.RegisterUserCase
 import tg.ulcrsandroid.carspooling.domain.usecases.authentification.SignInWithGoogleUseCase
@@ -38,17 +39,18 @@ class AuthViewModel(
         }
     }
 
-    fun register(email: String, password: String) {
+    fun register(email: String, password: String, username:String) {
         viewModelScope.launch {
             try {
                 // Appel du cas d'utilisation pour l'enregistrement
-                registerUserCase.execute(email, password) { firebaseUser, idToken, errorMessage ->
+                registerUserCase.execute(email, password, username) { firebaseUser, idToken, errorMessage ->
                     if (firebaseUser != null && idToken != null) {
                         // Si l'enregistrement réussit, on met à jour l'utilisateur et le token
-                        user.value = UserModel(uid = firebaseUser.uid,email=firebaseUser.email, displayName = null)
+                        GlobalUser.setUser(UserModel(uid = firebaseUser.uid,email=firebaseUser.email, displayName = null,carLicenseNumber = null))
                         _idToken.value = idToken
                         AuthManager.setToken(idToken)
                         AuthManager.displayToken()
+                        Log.i(Constants.TAG_AUTH, "Authenfication")
                     } else {
                         // Si une erreur se produit, on met à jour l'erreur
                         error.value = errorMessage
@@ -69,6 +71,7 @@ class AuthViewModel(
                     if (loggedInUser != null && idToken != null) {
                         // Connexion réussie, on met à jour l'utilisateur
                         user.value = loggedInUser
+                        GlobalUser.setUser(loggedInUser)
                         _idToken.value = idToken
                         AuthManager.setToken(idToken)
                         val token = AuthManager.idToken
