@@ -12,4 +12,6 @@
     <string name="sinscrire_avec">S\'inscrire avec</string>
     <string name="valider">valider</string>
     <string name="deja_compte_connexion">Vous avez deja un compte ? Connectez-vous</string>
+    <string name="client_id">3</string>
+    <string name="username">Nom d\'utilisateur</string>
 </resources>

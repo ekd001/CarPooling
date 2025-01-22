@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.CarPooling" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.CarSpooling" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/mainColor</item>
     </style>
 
@@ -9,5 +9,5 @@
         <item name="android:windowBackground">@color/mainColor</item>
     </style>
 
-    <style name="Theme.CarPooling" parent="Base.Theme.CarPooling" />
+    <style name="Theme.CarSpooling" parent="Base.Theme.CarSpooling" />
 </resources>
