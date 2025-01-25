@@ -1,11 +1,15 @@
 package tg.ulcrsandroid.carspooling.features.authentification.viewmodel
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import tg.ulcrsandroid.carspooling.MainActivity
 import tg.ulcrsandroid.carspooling.core.models.UserModel
 import tg.ulcrsandroid.carspooling.core.utils.AuthManager
 import tg.ulcrsandroid.carspooling.core.utils.Constants
@@ -63,7 +67,7 @@ class AuthViewModel(
         }
     }
 
-    fun login(email: String, password: String){
+    fun login(email: String, password: String, context:Context){
         viewModelScope.launch {
             try{
                 loginUseCase.execute(email, password) { loggedInUser, idToken,errorMessage ->
@@ -71,12 +75,15 @@ class AuthViewModel(
                     if (loggedInUser != null && idToken != null) {
                         // Connexion réussie, on met à jour l'utilisateur
                         user.value = loggedInUser
-                        GlobalUser.setUser(loggedInUser)
                         _idToken.value = idToken
                         AuthManager.setToken(idToken)
                         val token = AuthManager.idToken
                         if (token != null) {
                             Log.i(Constants.TAG_AUTH, "User token global : ${token}")
+                            Log.i(Constants.TAG_AUTH, "User global : ${GlobalUser.user}")
+                            val intent = Intent(context, MainActivity::class.java)
+                            context.startActivity(intent)
+                            Toast.makeText(context, "Connexion réussie", Toast.LENGTH_SHORT).show()
                         } else {
                             Log.i(Constants.TAG_AUTH, "User token global : indisponible")
                         }

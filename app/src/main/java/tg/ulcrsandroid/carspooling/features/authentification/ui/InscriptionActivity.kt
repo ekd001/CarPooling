@@ -22,17 +22,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import tg.ulcrsandroid.carspooling.MainActivity
+import tg.ulcrsandroid.carspooling.CarSpoolingApplication
 import tg.ulcrsandroid.carspooling.R
-import tg.ulcrsandroid.carspooling.data.repository.FirebaseUserRepository
-import tg.ulcrsandroid.carspooling.domain.usecases.authentification.LoginUseCase
-import tg.ulcrsandroid.carspooling.domain.usecases.authentification.RegisterUserCase
-import tg.ulcrsandroid.carspooling.domain.usecases.authentification.SignInWithGoogleUseCase
-import tg.ulcrsandroid.carspooling.domain.usecases.authentification.SignOutUseCase
 import tg.ulcrsandroid.carspooling.features.authentification.viewmodel.AuthViewModel
 import tg.ulcrsandroid.carspooling.features.authentification.viewmodel.AuthViewModelFactory
 
 class InscriptionActivity : AppCompatActivity() {
+
+    private lateinit var factory: AuthViewModelFactory
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var confirmPasswordEditText: EditText
@@ -71,16 +68,10 @@ class InscriptionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inscription)
-
-        val userRepository = FirebaseUserRepository()
-        val loginUseCase = LoginUseCase(userRepository)
-        val registerUserCase = RegisterUserCase(userRepository)
-        val signInWithGoogleUseCase = SignInWithGoogleUseCase(userRepository)
-        val signOutUseCase = SignOutUseCase(userRepository)
-        val factory = AuthViewModelFactory(signInWithGoogleUseCase, registerUserCase, loginUseCase,signOutUseCase)
+        val application = application as CarSpoolingApplication
+        factory = application.factoryAuthentifcation
         authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
         setupGoogleSignIn()
-        //authViewModel.login("real@madrid.com","real1234")
 
         emailEditText = findViewById(R.id.email_field)
         passwordEditText = findViewById(R.id.password_field)
@@ -137,7 +128,7 @@ class InscriptionActivity : AppCompatActivity() {
             if (password == confirmPassword) {
                 authViewModel.register(email, password, username)
                 finish()
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             }else {
                 Toast.makeText(this, "Les mots de passe ne correspondent pas", Toast.LENGTH_SHORT).show()

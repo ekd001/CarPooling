@@ -1,7 +1,6 @@
-package tg.ulcrsandroid.carspooling.data.repository
+package tg.ulcrsandroid.carspooling.data.repository.user
 
 import android.util.Log
-import androidx.activity.result.launch
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -11,15 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import com.google.android.gms.tasks.Task
 import tg.ulcrsandroid.carspooling.core.models.UserModel
-import tg.ulcrsandroid.carspooling.core.utils.AuthManager
 import tg.ulcrsandroid.carspooling.core.utils.Constants
+import tg.ulcrsandroid.carspooling.core.utils.GlobalUser
 import tg.ulcrsandroid.carspooling.domain.entities.User
 
-class FirebaseUserRepository:UserRepository {
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
+class FirebaseUserRepository(auth: FirebaseAuth, db: FirebaseFirestore): UserRepository {
+    private val auth = auth
+    private val db = db
 
     override suspend fun getCurrentUser(): UserModel? {
         val firebaseUser = auth.currentUser
@@ -91,37 +89,52 @@ class FirebaseUserRepository:UserRepository {
     override suspend fun login(
         email: String,
         password: String,
-        onResult: (UserModel?, String?,String?) -> Unit
+        onResult: (UserModel?, String?, String?) -> Unit
     ) {
-        try {
-            val result = auth.signInWithEmailAndPassword(email, password).await()
-            val firebaseUser = result.user
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Connecter l'utilisateur avec l'email et le mot de passe
+                val result = auth.signInWithEmailAndPassword(email, password).await()
+                val firebaseUser = result.user
 
-            firebaseUser?.let { user ->
-                // Récupérer le token ID
-                val idToken = user.getIdToken(true).await().token
-                if (idToken != null) {
-                    // Créer un objet UserModel à partir des informations de Firebase
-                    val baseUser = UserModel(
-                        uid = user.uid,
-                        email = user.email,
-                        displayName = null,
-                        carLicenseNumber = null
-                    )
+                if (firebaseUser != null) {
+                    // Obtenir le token Firebase ID
+                    val idToken = firebaseUser.getIdToken(true).await().token
+                    if (idToken != null) {
+                        // Créer un objet UserModel à partir des informations de Firebase
+                        val baseUser = UserModel(
+                            uid = firebaseUser.uid,
+                            email = firebaseUser.email,
+                            displayName = null,
+                            carLicenseNumber = null
+                        )
+                        Log.i(Constants.TAG_AUTH, "Base User: $baseUser")
 
-                    // Récupérer les informations supplémentaires depuis Firestore
-                    val fullUser = fetchUser(baseUser)
+                        // Récupérer les informations supplémentaires depuis Firestore
+                        val fullUser = fetchUser(baseUser)
 
-                    // Retourner les informations combinées
-                    onResult(fullUser ?: baseUser, idToken, null)
+                        // Retourner les informations combinées
+                        withContext(Dispatchers.Main) {
+                            onResult(fullUser ?: baseUser, idToken, null)
+                        }
+                    } else {
+                        // Gestion du cas où le token est null
+                        withContext(Dispatchers.Main) {
+                            onResult(null, null, "Failed to retrieve token")
+                        }
+                    }
                 } else {
-                    onResult(null, null, "Failed to retrieve token")
+                    // Gestion du cas où l'utilisateur Firebase est null
+                    withContext(Dispatchers.Main) {
+                        onResult(null, null, "User not found")
+                    }
                 }
-            } ?: run {
-                onResult(null, null, "User not found")
+            } catch (e: Exception) {
+                // Capture et retourne les exceptions
+                withContext(Dispatchers.Main) {
+                    onResult(null, null, e.message)
+                }
             }
-        } catch (e: Exception) {
-            onResult(null, null, e.message)
         }
     }
 
@@ -150,13 +163,24 @@ class FirebaseUserRepository:UserRepository {
                 .await()
 
             if (document.exists()) {
+                Log.d(Constants.TAG_STORAGE, "Document data: ${document.data}")
                 val fetchedUser = document.toObject(UserModel::class.java)
+                if (fetchedUser != null) {
+                    //val user = User(fetchedUser.uid, fetchedUser.displayName, fetchedUser.email, fetchedUser.carLicenseNumber)
+                    //user.setConnected(true)
+                    GlobalUser.setUser(fetchedUser) // Définit l'utilisateur global
+                    Log.d(Constants.TAG_STORAGE, "User mapped successfully: $fetchedUser")
+                } else {
+                    Log.e(Constants.TAG_STORAGE, "Mapping failed: fetchedUser is null")
+                }
                 fetchedUser
             } else {
+                Log.e(Constants.TAG_STORAGE, "Document does not exist for UID: ${userModel.uid}")
                 null
             }
         } catch (e: Exception) {
-            null // Gérer les erreurs ici si nécessaire
+            Log.e(Constants.TAG_STORAGE, "Error fetching user: ${e.message}")
+            null // Gérer les erreurs si nécessaire
         }
     }
 
