@@ -14,7 +14,7 @@ object GlobalUser {
 
     fun displayUser(){
         if (_user != null) {
-            Log.i(Constants.TAG_AUTH, "User global : ${_user!!.displayName}")
+            Log.i(Constants.TAG_AUTH, "User global : $_user")
         } else {
             Log.i(Constants.TAG_AUTH, "User global : indisponible")
         }

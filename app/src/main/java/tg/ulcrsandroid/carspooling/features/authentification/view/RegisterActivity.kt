@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import tg.ulcrsandroid.carspooling.R
 import tg.ulcrsandroid.carspooling.core.utils.ValidationUtils
-import tg.ulcrsandroid.carspooling.data.repository.FirebaseUserRepository
+import tg.ulcrsandroid.carspooling.data.repository.user.FirebaseUserRepository
 import tg.ulcrsandroid.carspooling.domain.usecases.LoginUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.RegisterUserCase
 import tg.ulcrsandroid.carspooling.domain.usecases.SignInWithGoogleUseCase

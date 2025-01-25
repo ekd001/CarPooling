@@ -1,8 +1,7 @@
-package tg.ulcrsandroid.carspooling.data.repository
+package tg.ulcrsandroid.carspooling.data.repository.user
 
 import com.google.firebase.auth.FirebaseUser
 import tg.ulcrsandroid.carspooling.core.models.UserModel
-import tg.ulcrsandroid.carspooling.domain.entities.User
 
 /**
  * Interface contient les méthodes utilisés pour designer

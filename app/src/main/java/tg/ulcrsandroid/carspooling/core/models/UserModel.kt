@@ -5,8 +5,8 @@ package tg.ulcrsandroid.carspooling.core.models
  *
  */
 data class UserModel(
-    val uid: String, // id du compte
-    val email: String?, // email du compte
-    val displayName: String?, // nom de l'utilisateur du compte
-    var carLicenseNumber:String? //numero de permis
+    val uid: String = "", // id du compte
+    val email: String? = null, // email du compte
+    val displayName: String? = null, // nom de l'utilisateur du compte
+    var carLicenseNumber:String? = null //numero de permis
 )

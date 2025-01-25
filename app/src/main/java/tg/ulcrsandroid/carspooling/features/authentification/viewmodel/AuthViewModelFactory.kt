@@ -17,7 +17,7 @@ class AuthViewModelFactory(
         return if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
             AuthViewModel(signInWithGoogleUseCase, registerUserCase,loginUseCase, signOutUseCase) as T
         } else {
-            throw IllegalArgumentException("Unknown ViewModel class")
+            throw IllegalArgumentException("Not AuthViewModel class")
         }
     }
 }

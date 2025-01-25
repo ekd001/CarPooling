@@ -2,6 +2,7 @@ package tg.ulcrsandroid.carspooling
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import tg.ulcrsandroid.carspooling.core.utils.GlobalUser
 import tg.ulcrsandroid.carspooling.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -11,5 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         ui = ActivityMainBinding.inflate(layoutInflater)
         setContentView(ui.root)
+
+        GlobalUser.displayUser()
     }
 }
