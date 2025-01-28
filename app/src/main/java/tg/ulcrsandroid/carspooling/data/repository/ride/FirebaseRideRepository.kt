@@ -1,0 +1,59 @@
+package tg.ulcrsandroid.carspooling.data.repository.ride
+
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+import tg.ulcrsandroid.carspooling.core.models.RideModel
+
+class FirebaseRideRepository(db: FirebaseFirestore) : RideRepository {
+    private val db = db.collection("rides")
+
+    override suspend fun add(rideModel: RideModel, onResult: (Boolean) -> Unit) {
+        return try {
+            db.add(rideModel).await()
+            onResult(true)
+        } catch (e: Exception) {
+            onResult(false)
+        }
+    }
+
+    override suspend fun delete(rideId: String, onResult: (Boolean) -> Unit) {
+        try {
+            // Rechercher le document avec whereEqualTo
+            val querySnapshot = db.whereEqualTo("rideId", rideId).get().await()
+
+            // Vérifier si un document correspondant a été trouvé
+            if (!querySnapshot.isEmpty) {
+                // Supprimer chaque document trouvé (même si normalement il ne doit y en avoir qu'un)
+                for (document in querySnapshot.documents) {
+                    db.document(document.id).delete().await()
+                }
+                onResult(true)
+            } else {
+                onResult(false)
+            }
+        } catch (e: Exception) {
+            onResult(false)
+        }
+    }
+
+    override suspend fun search(departure: String, arrival: String,date:String,placeNumber:Int,onResult: (List<RideModel>) -> Unit) {
+        return try {
+            val querySnapshot = db.whereEqualTo("departure", departure)
+                .whereEqualTo("arrival", arrival)
+                .whereEqualTo("dateRide", date)
+                .whereEqualTo("placeNumber", placeNumber)
+                .get()
+                .await() // await pour attendre les résultats de la requête
+
+            // Transforme les documents en objets RideModel
+            val rides = querySnapshot.documents.mapNotNull { document ->
+                document.toObject(RideModel::class.java) // Conversion Firestore
+            }
+
+            onResult(rides) // Retourne la liste des résultats
+        } catch (e: Exception) {
+            onResult(emptyList()) // Retourne une liste vide en cas d'échec
+        }
+    }
+
+}

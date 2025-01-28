@@ -7,5 +7,6 @@ package tg.ulcrsandroid.carspooling.core.utils
  */
 object Constants {
     /*TAG_AUTH est utilisée pour servir de tag pour reperer l'affichage des logs sur l'authentification*/
-    const val TAG_AUTH = "Authentification"
+    const val TAG_AUTH = "AUTHENTIFICATION"
+    const val TAG_STORAGE = "STORAGE"
 }

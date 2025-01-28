@@ -1,12 +1,21 @@
 package tg.ulcrsandroid.carspooling.domain.entities
 
-class User(
-    val id: String,
-    val name: String,
-    val email: String,
-    val connected:Boolean = false
+open class User(
+    var id: String,
+    val displayName: String?,
+    val email: String?,
+    val carLicenseNumber: String?,
+    private var connected:Boolean = false
 ){
     fun isConnected():Boolean{
         return connected
+    }
+
+    fun setConnected(connected: Boolean){
+        this.connected = connected
+    }
+
+    fun isDriver():Boolean{
+        return carLicenseNumber != null
     }
 }

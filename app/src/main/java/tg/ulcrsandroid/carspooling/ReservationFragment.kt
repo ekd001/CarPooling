@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import tg.ulcrsandroid.carpooling.R
 import tg.ulcrsandroid.carpooling.databinding.FragmentReservationBinding
-
+import tg.ulcrsandroid.carspooling.domain.entities.Reservation
 
 
 /**
@@ -75,6 +75,7 @@ class ReservationFragment : Fragment() {
 
     private fun getReservationsFromDatabase(): List<Reservation> {
         // TODO: Implémenter la logique pour récupérer les réservations de la base de données
+
 
     }
 

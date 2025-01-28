@@ -7,16 +7,27 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import tg.ulcrsandroid.carpooling.databinding.ActivityLoginBinding
-import tg.ulcrsandroid.carpooling.faetures.authentication.ui.InscriptionActivity
+import androidx.lifecycle.ViewModelProvider
+import tg.ulcrsandroid.carspooling.CarSpoolingApplication
+import tg.ulcrsandroid.carspooling.MainActivity
 import tg.ulcrsandroid.carspooling.databinding.ActivityLoginBinding
+import tg.ulcrsandroid.carspooling.features.authentification.viewmodel.AuthViewModel
+import tg.ulcrsandroid.carspooling.features.authentification.viewmodel.AuthViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
-    lateinit var ui: ActivityLoginBinding
+
+    private lateinit var ui: ActivityLoginBinding
+    private lateinit var factory: AuthViewModelFactory
+    private lateinit var authViewModel: AuthViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ui = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(ui.root)
+
+        val application = application as CarSpoolingApplication
+        factory = application.factoryAuthentifcation
+        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
         ui.loginButton.isEnabled = false
         ui.loginButton.setBackgroundColor(Color.DKGRAY)
@@ -32,22 +43,17 @@ class LoginActivity : AppCompatActivity() {
         ui.loginButton.isEnabled = false
         ui.emailInput.addTextChangedListener(textWatcher)
         ui.passwordInput.addTextChangedListener(textWatcher)
-
-
         ui.loginButton.setOnClickListener {
             val email = ui.emailInput.text.toString()
             val password = ui.passwordInput.text.toString()
-//            if (email.isEmpty() || password.isEmpty()) {
-//                Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show()
-//            } else {
-//
-//                Toast.makeText(this, "Connexion réussie", Toast.LENGTH_SHORT).show()
-//            }
-
-            TODO("Ce qu'il faut pour la connexion")
-
+           if (email.isEmpty() || password.isEmpty()) {
+               Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show()
+            } else {
+                authViewModel.login(email, password,this)
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
         }
-
 
         ui.registerText.setOnClickListener {
             finish()
@@ -71,6 +77,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        TODO("Not yet implemented")
     }
+
 }
+

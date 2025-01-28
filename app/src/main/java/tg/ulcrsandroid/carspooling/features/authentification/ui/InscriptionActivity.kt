@@ -1,40 +1,107 @@
-package tg.ulcrsandroid.carpooling.faetures.authentication.ui
+package tg.ulcrsandroid.carspooling.features.authentification.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import tg.ulcrsandroid.carpooling.R
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import tg.ulcrsandroid.carspooling.CarSpoolingApplication
+import tg.ulcrsandroid.carspooling.R
+import tg.ulcrsandroid.carspooling.features.authentification.viewmodel.AuthViewModel
+import tg.ulcrsandroid.carspooling.features.authentification.viewmodel.AuthViewModelFactory
 
 class InscriptionActivity : AppCompatActivity() {
+
+    private lateinit var factory: AuthViewModelFactory
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var confirmPasswordEditText: EditText
+    private lateinit var roleRadioGroup: RadioGroup
+    private lateinit var radioPassengerButton: RadioButton
     private lateinit var signupButton: Button
-    private lateinit var googleSignUpButton: Button
+    private lateinit var googleSignUpButton: LinearLayout
     private lateinit var alreadyAccountTextView: TextView
     private lateinit var driverLicenseEditText: EditText
     private lateinit var usernameEditText: EditText
+    private lateinit var authViewModel: AuthViewModel
+    private lateinit var googleSignInClient: GoogleSignInClient
+
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val data: Intent? = result.data
+        if (result.resultCode == RESULT_OK && data != null) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account: GoogleSignInAccount? = task.getResult(Exception::class.java)
+                account?.idToken?.let { idToken ->
+                    authViewModel.signInWithGoogle(idToken)
+                    Log.i("Auth", "Google Sign-In successful")
+                }
+            } catch (e: Exception) {
+                Log.i("Auth", "Google Sign-In failed", e)
+            }
+        } else {
+            Log.i("Auth", "Google Sign-In canceled or failed")
+        }
+    }
 
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inscription)
-        emailEditText = findViewById(R.id.emailInput)
+        val application = application as CarSpoolingApplication
+        factory = application.factoryAuthentifcation
+        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
+        setupGoogleSignIn()
+
+        emailEditText = findViewById(R.id.email_field)
         passwordEditText = findViewById(R.id.password_field)
         confirmPasswordEditText = findViewById(R.id.confirm_password_field)
+        roleRadioGroup = findViewById(R.id.rgRole)
+        radioPassengerButton = findViewById(R.id.rbPassenger)
+        radioPassengerButton.isChecked = true
         signupButton = findViewById(R.id.signup_button)
         googleSignUpButton = findViewById(R.id.btnGoogleSignUp)
         alreadyAccountTextView = findViewById(R.id.tvAlreadyAccount)
         driverLicenseEditText = findViewById(R.id.etDriverLicense)
         usernameEditText = findViewById(R.id.username_field)
+
+        driverLicenseEditText.isEnabled = false
+        roleRadioGroup.setOnCheckedChangeListener{_, checkedId ->
+            when (checkedId) {
+                R.id.rbPassenger -> {
+                    driverLicenseEditText.visibility = View.GONE
+                }
+                R.id.rbDriver -> {
+                    driverLicenseEditText.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        alreadyAccountTextView.setOnClickListener {
+            finish()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
 
         signupButton.isEnabled=false
         signupButton.setBackgroundColor(Color.DKGRAY)
@@ -59,22 +126,30 @@ class InscriptionActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
             val confirmPassword = confirmPasswordEditText.text.toString()
             if (password == confirmPassword) {
-
-            } else {
+                authViewModel.register(email, password, username)
+                finish()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }else {
                 Toast.makeText(this, "Les mots de passe ne correspondent pas", Toast.LENGTH_SHORT).show()
             }
         }
 
-
+        googleSignUpButton.setOnClickListener {
+            signInWithGoogle()
+            Log.i("Auth", "Google Sign-In button clicked")
+            // un dialog pour s'inscrire avec google
+        }
     }
 
     private fun validateInputs() {
-        val username = usernameEditText.text.toString()
         val email = emailEditText.text.toString()
         val password = passwordEditText.text.toString()
         val confirmPassword = confirmPasswordEditText.text.toString()
 
-        if (isValidEmail(email) && password.isNotEmpty() && confirmPassword.isNotEmpty() && password == confirmPassword) {
+        if (isValidEmail(email) && password.isNotEmpty() &&
+            confirmPassword.isNotEmpty() &&
+            password == confirmPassword) {
             signupButton.isEnabled = true
             signupButton.setBackgroundColor(Color.parseColor("#1e272e"))
         } else {
@@ -86,6 +161,20 @@ class InscriptionActivity : AppCompatActivity() {
     private fun isValidEmail(email: String): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         return email.matches(emailPattern.toRegex())
+    }
+
+    private fun setupGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.client_id)) // Placez votre ID client ici
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+
+    private fun signInWithGoogle() {
+        val signInIntent = googleSignInClient.signInIntent
+        googleSignInLauncher.launch(signInIntent) // Utilisez le lanceur ici
     }
 
     override fun onDestroy() {
