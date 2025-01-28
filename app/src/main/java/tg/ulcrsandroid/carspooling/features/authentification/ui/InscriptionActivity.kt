@@ -20,12 +20,13 @@ class InscriptionActivity : AppCompatActivity() {
     private lateinit var googleSignUpButton: Button
     private lateinit var alreadyAccountTextView: TextView
     private lateinit var driverLicenseEditText: EditText
+    private lateinit var usernameEditText: EditText
 
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /*setContentView(R.layout.activity_inscription)
+        setContentView(R.layout.activity_inscription)
         emailEditText = findViewById(R.id.emailInput)
         passwordEditText = findViewById(R.id.password_field)
         confirmPasswordEditText = findViewById(R.id.confirm_password_field)
@@ -33,6 +34,7 @@ class InscriptionActivity : AppCompatActivity() {
         googleSignUpButton = findViewById(R.id.btnGoogleSignUp)
         alreadyAccountTextView = findViewById(R.id.tvAlreadyAccount)
         driverLicenseEditText = findViewById(R.id.etDriverLicense)
+        usernameEditText = findViewById(R.id.username_field)
 
         signupButton.isEnabled=false
         signupButton.setBackgroundColor(Color.DKGRAY)
@@ -46,11 +48,13 @@ class InscriptionActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         }
 
+        usernameEditText.addTextChangedListener(textWatcher)
         emailEditText.addTextChangedListener(textWatcher)
         passwordEditText.addTextChangedListener(textWatcher)
         confirmPasswordEditText.addTextChangedListener(textWatcher)
 
         signupButton.setOnClickListener {
+            val username = usernameEditText.text.toString()
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
             val confirmPassword = confirmPasswordEditText.text.toString()
@@ -59,12 +63,13 @@ class InscriptionActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Les mots de passe ne correspondent pas", Toast.LENGTH_SHORT).show()
             }
-        }*/
+        }
 
 
     }
 
     private fun validateInputs() {
+        val username = usernameEditText.text.toString()
         val email = emailEditText.text.toString()
         val password = passwordEditText.text.toString()
         val confirmPassword = confirmPasswordEditText.text.toString()

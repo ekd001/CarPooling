@@ -1,5 +1,6 @@
 package tg.ulcrsandroid.carpooling
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
@@ -7,19 +8,23 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import tg.ulcrsandroid.carpooling.databinding.ActivityMainBinding
+import tg.ulcrsandroid.carspooling.ReservationFragment
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var ui: ActivityMainBinding
     private lateinit var googleMap: GoogleMap
     lateinit var searchIcon: ImageView
     lateinit var searchInput: EditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 isActiveIcon = true
             }
         }
+
+        val bottomNavigationView = ui.bottomNavigation
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_reserve -> {
+                    showFragment(ReservationFragment())
+                    true
+                }
+                R.id.nav_profile -> {
+                    showFragment(ProfileFragment())
+                    true
+                }
+                else -> false
+            }
+        }
+                }
+            }
+            else -> false
+        }
     }
 
     override fun onMapReady(map: GoogleMap) {
@@ -63,4 +87,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         googleMap.addMarker(MarkerOptions().position(defaultLocation).title("Marker in Paris"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10f))
     }
+
+    private fun showFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.mapFragment, fragment)
+            .commit()
+    }
+
+
 }

@@ -16,19 +16,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CarPooling"
         tools:targetApi="31">
+        <activity
+            android:name="tg.ulcrsandroid.carspooling.Reservation.ReservationActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="" />
+
         <activity
             android:name=".faetures.authentication.ui.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
-            android:exported="false" android:theme="@style/SplashTheme" />
+            android:exported="false"
+            android:theme="@style/SplashTheme" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

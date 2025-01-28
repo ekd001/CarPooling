@@ -5,4 +5,5 @@
     <color name="gray">#808080</color>
     <color name="mainColor">#3579F4</color>
     <color name="lowMainColor">#005AA2</color>
+    <color name="confirmed">#2ecc71</color>
 </resources>
