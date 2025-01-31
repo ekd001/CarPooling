@@ -208,7 +208,7 @@
                 android:id="@+id/socialButtonImage"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/google_icon" />
+                android:src="@drawable/google_maps_icon" />
 
             <TextView
                 android:id="@+id/socialButtonText"

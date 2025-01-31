@@ -3,14 +3,10 @@ package tg.ulcrsandroid.carpooling.faetures.authentication.ui
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import tg.ulcrsandroid.carpooling.R
 
 class InscriptionActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText

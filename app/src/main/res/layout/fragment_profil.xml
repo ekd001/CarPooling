@@ -1,0 +1,136 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfilFragment">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/mainColor"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:elevation="4dp"
+        style="@style/CustomToolbarStyle"
+        android:title="Profil utilisateur" />
+
+    <!-- Contenu principal -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="60dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+        <!-- Photo de profil -->
+            <ImageView
+                android:id="@+id/profilePicture"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/profil_icon"
+                android:layout_marginBottom="16dp"
+                android:scaleType="centerCrop" />
+        </LinearLayout>
+
+        <!-- Username -->
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/usernameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Nom d'utilisateur"
+                android:fontFamily="@font/gotham_black"
+                android:textSize="20sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/usernameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manawa"
+                android:fontFamily="@font/gotham_medium"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <!-- Email -->
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/emailLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Email"
+                android:fontFamily="@font/gotham_black"
+                android:textSize="20sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/emailText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="email@example.com"
+                android:fontFamily="@font/gotham_medium"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <!-- Numéro de permis -->
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- Email -->
+            <TextView
+                android:id="@+id/permisLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="No Permis de conduire"
+                android:fontFamily="@font/gotham_black"
+                android:textSize="20sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/permisText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aucun"
+                android:fontFamily="@font/gotham_medium"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <!-- Bouton pour basculer entre les profils -->
+        <Button
+            android:id="@+id/toggleProfileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</FrameLayout>

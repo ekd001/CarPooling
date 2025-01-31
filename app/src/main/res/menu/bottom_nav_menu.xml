@@ -7,14 +7,14 @@
         android:title="@string/accueil" />
 
     <item
-        android:id="@+id/nav_search"
-        android:icon="@drawable/search_icon"
-        android:title="@string/recherche" />
-
-    <item
         android:id="@+id/nav_reserve"
         android:icon="@drawable/reserve_icon"
         android:title="@string/reservation" />
+
+    <item
+        android:id="@+id/nav_notif"
+        android:icon="@drawable/notif_icon"
+        android:title="@string/notifications" />
 
     <item
         android:id="@+id/nav_profile"
