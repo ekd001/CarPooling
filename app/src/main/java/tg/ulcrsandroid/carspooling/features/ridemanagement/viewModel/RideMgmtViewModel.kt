@@ -1,23 +1,31 @@
 package tg.ulcrsandroid.carspooling.features.ridemanagement.viewModel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import tg.ulcrsandroid.carspooling.core.models.ReservationModel
 import tg.ulcrsandroid.carspooling.core.models.RideModel
-import tg.ulcrsandroid.carspooling.core.models.UserModel
 import tg.ulcrsandroid.carspooling.core.utils.Constants
+import tg.ulcrsandroid.carspooling.domain.usecases.notification.NotificationDemanadReservationUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.AddRideUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.DeleteRideUseCase
+import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.MakereservationUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.SearchRideUseCase
+import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.UpdateStatusUseCase
 
 class RideMgmtViewModel(
     private val addRideUseCase: AddRideUseCase,
     private val deleteRideUseCase: DeleteRideUseCase,
-    private val searchRideUseCase: SearchRideUseCase
+    private val searchRideUseCase: SearchRideUseCase,
+    private val makereservationUseCase: MakereservationUseCase,
+    private val sendDemandReservationNotificationUseCase: NotificationDemanadReservationUseCase,
+    private val updateStatusUseCase: UpdateStatusUseCase
 ) : ViewModel() {
-    val ride = MutableLiveData<RideModel?>()
+    private val _rides = MutableLiveData<List<RideModel>>()
+    val rides: LiveData<List<RideModel>> get() = _rides
     val error = MutableLiveData<String?>()
 
     fun addRide(rideModel: RideModel){
@@ -52,14 +60,42 @@ class RideMgmtViewModel(
         }
     }
 
-    fun searchRide(departure: String, arrival:String, date:String, placeNumber:Int){
+    fun searchRide(departure: String, arrival:String, date:String, placeNumber:Int) {
+        var riders = listOf<RideModel>()
         viewModelScope.launch {
             try {
                 searchRideUseCase.execute(departure,arrival,date,placeNumber){rideList ->
                     if(rideList.isNotEmpty()){
                         Log.i(Constants.TAG_STORAGE, "List of ride ${rideList.size}")
+                        _rides.postValue(rideList)
+                        Log.i(Constants.TAG_STORAGE, "List of ride ${riders.size}")
                     }else{
                         Log.i(Constants.TAG_STORAGE, "List of ride is empty!")
+                        _rides.postValue(emptyList())
+                    }
+                }
+            }catch (e:Exception){
+                error.value = e.message
+                _rides.postValue(emptyList())
+            }
+        }
+    }
+
+    fun makeReservation(reservation: ReservationModel, driverUid: String) {
+        viewModelScope.launch {
+            try {
+                makereservationUseCase.execute(reservation){result ->
+                    if(result){
+                        Log.i(Constants.TAG_STORAGE, "Reservation is saved successfuly!")
+                        sendDemandReservationNotificationUseCase.execute(driverUid){result ->
+                            if(result){
+                                Log.i(Constants.TAG_NOTIFICATION, "Notification is sent successfuly!")
+                            } else {
+                                Log.i(Constants.TAG_NOTIFICATION, "Notification is not sent!")
+                            }
+                        }
+                    } else {
+                        Log.i(Constants.TAG_STORAGE, "Reservation is not saved!")
                     }
                 }
             }catch (e:Exception){
@@ -67,4 +103,20 @@ class RideMgmtViewModel(
             }
         }
     }
-}
+
+    fun updateStatus(reservationId: String, status: String) {
+        viewModelScope.launch {
+            try {
+                updateStatusUseCase.execute(reservationId, status){result ->
+                    if(result){
+                        Log.i(Constants.TAG_STORAGE, "Status is updated successfuly!")
+                    }else{
+                        Log.i(Constants.TAG_STORAGE, "Status is not updated!")
+                    }
+                }
+            }catch (e:Exception) {
+                error.value = e.message
+            }
+
+        }
+}   }

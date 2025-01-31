@@ -1,10 +1,13 @@
 package tg.ulcrsandroid.carspooling.features.ridemanagement.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import tg.ulcrsandroid.carspooling.CarSpoolingApplication
+import tg.ulcrsandroid.carspooling.core.models.ReservationModel
 import tg.ulcrsandroid.carspooling.core.models.RideModel
+import tg.ulcrsandroid.carspooling.core.utils.Constants
 import tg.ulcrsandroid.carspooling.features.ridemanagement.viewModel.RideMgmtViewModel
 
 class RideManageActivity: AppCompatActivity() {
@@ -29,4 +32,30 @@ class RideManageActivity: AppCompatActivity() {
         rideMgmtViewModel.deleteRide("R123458")
 
     }
+
+    /*val id = intent.getStringExtra(Constants.TAG_USER)
+    val application = application as CarSpoolingApplication
+    var driverUid = ""
+    rideMgmtViewModel = ViewModelProvider(
+    this,
+    application.factoryRideManagement
+    )[RideMgmtViewModel::class.java]
+
+    rideMgmtViewModel.rides.observe(this, Observer { riders ->
+        Log.i(Constants.TAG_STORAGE, "List is ready")
+        if (riders.isNotEmpty()) {
+            reservation = ReservationModel(
+                "123456789",
+                "2025-01-29",
+                "pending",
+                intent.getStringExtra(Constants.TAG_USER).toString(),
+                riders.first().rideId
+            )
+            driverUid = riders.first().driverId
+        } else {
+            Log.i(Constants.TAG_STORAGE, "List of ride is empty!")
+        }
+
+         rideMgmtViewModel.searchRide("Lomé", "Kpalimé", "2025-02-01", 4)
+    })*/
 }

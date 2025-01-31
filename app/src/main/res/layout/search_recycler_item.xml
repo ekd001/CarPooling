@@ -1,0 +1,46 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical">
+
+    <!-- Conteneur horizontal pour l'icône et le texte -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp"
+        android:layout_marginBottom="5dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <!-- Icône à gauche -->
+        <ImageView
+            android:id="@+id/itemIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/maps_search_icon" />
+
+        <!-- Texte de l'élément -->
+        <TextView
+            android:id="@+id/itemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/element_recherche"
+            android:fontFamily="@font/gotham_book"
+            android:textSize="16sp"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <!-- Séparateur -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        android:layout_marginStart="56dp" /> <!-- Décalage après l'icône et le padding -->
+
+</LinearLayout>
+
+

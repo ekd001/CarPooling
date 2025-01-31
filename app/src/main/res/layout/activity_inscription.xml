@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="#F5F5F5"
     android:padding="16dp"
     tools:context=".features.authentification.ui.InscriptionActivity">
@@ -12,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:padding="16dp">
 
 
 
@@ -59,7 +59,7 @@
             android:orientation="horizontal"
             android:padding="8dp"
             android:layout_marginBottom="8dp">
-        <!-- Email Input -->
+            <!-- Email Input -->
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -77,7 +77,7 @@
                 android:paddingStart="8dp"
                 android:background="@drawable/edit_text_custom"/>
         </LinearLayout>
-            <!-- Password Input -->
+        <!-- Password Input -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,13 +97,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:autofillHints="password"
                 android:hint="@string/mot_de_passe"
                 android:fontFamily="@font/gotham_book"
                 android:inputType="textPassword"
                 android:background="@drawable/edit_text_custom"
                 android:paddingStart="8dp" />
         </LinearLayout>
-            <!-- Confirm Password Input -->
+        <!-- Confirm Password Input -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -169,17 +170,19 @@
                     android:text="Driver"
                     android:fontFamily="@font/gotham_bold" />
             </RadioGroup>
-    </LinearLayout>
-            <!-- Driver License Input (Hidden by Default) -->
-            <EditText
-                android:id="@+id/etDriverLicense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Numero de permi"
-                android:background="@drawable/rounded_input"
-                android:padding="16dp"
-                android:layout_marginBottom="24dp"
-                android:inputType="text" />
+        </LinearLayout>
+        <!-- Driver License Input (Hidden by Default) -->
+        <EditText
+            android:id="@+id/etDriverLicense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Identifiant du permi"
+            android:fontFamily="@font/gotham_book"
+            android:background="@drawable/edit_text_custom"
+
+            android:padding="16dp"
+            android:layout_marginBottom="24dp"
+            android:inputType="text" />
 
         <!-- Sign Up Button -->
         <Button

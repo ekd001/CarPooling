@@ -14,7 +14,8 @@
         android:theme="@style/Theme.CarSpooling"
         tools:targetApi="31">
         <activity
-            android:name=".features.ridemanagement.view.RideManageActivity"
+            android:theme="@style/SplashTheme"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,10 +23,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:exported="false"/>
+        <activity android:name=".features.ridemanagement.view.RideManageActivity" android:exported="false"/>
         <activity android:name=".features.authentification.ui.LoginActivity" android:exported="false"/>
         <activity android:name=".features.authentification.ui.InscriptionActivity" android:exported="false"/>
-        <activity android:name=".SplashActivity" android:exported="false"/>
-    </application>
+        <activity android:name=".DriverActivity" android:exported="false"/>
+        <activity android:name=".MainActivity" android:exported="false"/>
+        <activity
+            android:name=".ConducteurActivity"
+            android:exported="false" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao" />
+
+    </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <meta-data
+        android:name="onesignal_app_id"
+        android:value="b6a8c024-67c0-4285-9b92-8f267e83d722"/>
+    <meta-data
+        android:name="onesignal_google_project_number"
+        android:value="REMOTE"/>
 </manifest>

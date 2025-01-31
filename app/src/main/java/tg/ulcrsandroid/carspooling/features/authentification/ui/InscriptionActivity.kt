@@ -85,7 +85,7 @@ class InscriptionActivity : AppCompatActivity() {
         driverLicenseEditText = findViewById(R.id.etDriverLicense)
         usernameEditText = findViewById(R.id.username_field)
 
-        driverLicenseEditText.isEnabled = false
+        driverLicenseEditText.isEnabled = true
         roleRadioGroup.setOnCheckedChangeListener{_, checkedId ->
             when (checkedId) {
                 R.id.rbPassenger -> {

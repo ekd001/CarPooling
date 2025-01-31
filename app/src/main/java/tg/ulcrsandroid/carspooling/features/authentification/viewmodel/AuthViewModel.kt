@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.onesignal.OneSignal
 import kotlinx.coroutines.launch
 import tg.ulcrsandroid.carspooling.MainActivity
 import tg.ulcrsandroid.carspooling.core.models.UserModel
@@ -81,7 +82,19 @@ class AuthViewModel(
                         if (token != null) {
                             Log.i(Constants.TAG_AUTH, "User token global : ${token}")
                             Log.i(Constants.TAG_AUTH, "User global : ${GlobalUser.user}")
+
+                            OneSignal.setExternalUserId(loggedInUser.uid)
+                            val deviceState = OneSignal.getDeviceState()
+                            val playerId = deviceState?.userId
+                            Log.i("OneSignal", "Player ID: $playerId")
+                            val isSubscribed = deviceState?.isSubscribed ?: false
+                            Log.i("OneSignal", "Is subscribed: $isSubscribed")
+
                             val intent = Intent(context, MainActivity::class.java)
+                            intent.putExtra(Constants.TAG_USER_ID,loggedInUser.uid)
+                            intent.putExtra(Constants.TAG_USER_USERNAME, loggedInUser.displayName)
+                            intent.putExtra(Constants.TAG_USER_EMAIL, loggedInUser.email)
+                            intent.putExtra(Constants.TAG_USER_CAR_LICENSE_NUMBER, loggedInUser.carLicenseNumber)
                             context.startActivity(intent)
                             Toast.makeText(context, "Connexion réussie", Toast.LENGTH_SHORT).show()
                         } else {

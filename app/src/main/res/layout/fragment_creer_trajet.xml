@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".CreerTrajetFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/mainColor"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:elevation="4dp"
+        style="@style/CustomToolbarStyle"
+        android:title="Profil utilisateur" />
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="9dp"
+                android:src="@drawable/starting_icon" />
+
+            <AutoCompleteTextView
+                android:id="@+id/departInput"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:hint="Lieu de départ"
+                android:fontFamily="@font/gotham_book"
+                android:inputType="text"
+                android:paddingStart="8dp"
+                android:background="@drawable/edit_text_custom" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="9dp"
+                android:src="@drawable/input_map_icon" />
+
+            <AutoCompleteTextView
+                android:id="@+id/destinationInput"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:hint="destination"
+                android:fontFamily="@font/gotham_book"
+                android:inputType="text"
+                android:paddingStart="8dp"
+                android:background="@drawable/edit_text_custom" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="9dp"
+                android:src="@drawable/date_icon" />
+
+            <EditText
+                android:id="@+id/dateEditText"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_custom"
+                android:hint="Date"
+                android:focusable="false"
+                android:clickable="true"
+                android:paddingStart="8dp"
+                android:inputType="none"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="9dp"
+                android:src="@drawable/heure_icon" />
+
+            <EditText
+                android:id="@+id/timeEditText"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_custom"
+                android:hint="Heure"
+                android:focusable="false"
+                android:clickable="true"
+                android:paddingStart="8dp"
+                android:inputType="none"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="9dp"
+                android:src="@drawable/place_icon" />
+
+            <Spinner
+                android:id="@+id/numberSpinner"
+                android:layout_width="0dp"
+                android:padding="0dp"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:hint="Nombre de places"
+                android:background="@drawable/edit_text_custom"
+                android:spinnerMode="dropdown"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/creerButton"
+        android:layout_width="238dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="450dp"
+        android:layout_marginStart="100dp"
+        android:backgroundTint="@color/mainColor"
+        android:text="Créer le trajet"
+        android:fontFamily="@font/gotham_medium"
+        android:textColor="@android:color/white" />
+
+
+</FrameLayout>
