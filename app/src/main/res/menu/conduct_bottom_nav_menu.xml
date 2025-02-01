@@ -4,7 +4,7 @@
     <item
         android:id="@+id/nav_demande"
         android:icon="@drawable/demande_icon"
-        android:title="Demandes de trajets" />
+        android:title="Demandes" />
 
     <item
         android:id="@+id/nav_ajouter"

@@ -7,6 +7,6 @@
     <color name="lowMainColor">#005AA2</color>
     <color name="carIconColor">#005AA2</color>
     <color name="container">#A1ABBE</color>
-    <color name="red">#FF0000</color>
+    <color name="red">#D7FF0000</color>
     <color name="green">#41A027</color>
 </resources>

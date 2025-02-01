@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.Manifest
+import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -39,7 +42,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var googleMap: GoogleMap
     private lateinit var mapFragment: Fragment
     lateinit var searchIcon: ImageView
-    lateinit var searchInput: EditText
+    lateinit var searchInput: AutoCompleteTextView
     lateinit var bottomNavigation: BottomNavigationView
     lateinit var suggestionsRecyclerView: RecyclerView
     private lateinit var routeDetailsLayout: View
@@ -74,8 +77,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                 )
-        window.statusBarColor = android.graphics.Color.TRANSPARENT
-        window.navigationBarColor = android.graphics.Color.WHITE
+        window.statusBarColor = Color.TRANSPARENT
+
 
         // Liaison avec les éléments de l'UI
         bottomNavigation = ui.bottomNavigation
@@ -99,17 +102,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                                     or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                             )
-                    window.statusBarColor = android.graphics.Color.TRANSPARENT
+                    window.statusBarColor = Color.TRANSPARENT
                     homeContainer.visibility = View.VISIBLE
                     fragmentContainer.visibility = View.GONE
                     supportFragmentManager.popBackStack()
                     true
                 }
                 R.id.nav_reserve -> {
-                    //showFragment(ReservationFragment())
-                    true
-                }
-                R.id.nav_notif -> {
                     //showFragment(ReservationFragment())
                     true
                 }
@@ -181,28 +180,39 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 // Changer l'icône lorsque l'EditText est sélectionné
                 searchIcon.setImageResource(R.drawable.back_icon)
                 isActiveIcon = true
-                mapFragmentContainer.visibility = View.GONE
-                bottomNavigation.visibility = View.GONE
-                suggestionsRecyclerView.visibility = View.VISIBLE
+                ui.searchField.visibility = View.GONE
+                showRouteDetailsLayout("")
             } else {
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }
 
-        // Suggestions fictives
-        val suggestions = listOf("Paris", "London", "New York", "Tokyo", "Berlin")
+        val adapterDepart = ArrayAdapter(this, R.layout.item_suggestion_recherche, lieux)
+        searchInput.setAdapter(adapterDepart)
+        searchInput.setDropDownVerticalOffset(30)
+        searchInput.threshold = 1
+        searchInput.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // Filtre les suggestions en fonction de l'entrée
+                val filteredSuggestions = lieux.filter { it.startsWith(s.toString(), ignoreCase = true) }
+                val filteredAdapter = ArrayAdapter(searchInput.context, R.layout.item_suggestion_recherche, filteredSuggestions)
+                searchInput.setAdapter(filteredAdapter)
+            }
 
-        // Configurer l'adapter pour les suggestions
-        val adapter = SuggestionsAdapter(suggestions) { suggestion ->
-            // Lorsqu'une suggestion est sélectionnée
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        searchInput.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            searchInput.setText(selectedItem)
             ui.searchField.visibility = View.GONE
             bottomSheetView.visibility = View.VISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            showRouteDetailsLayout(suggestion)
+            showRouteDetailsLayout(selectedItem)
         }
-        suggestionsRecyclerView.adapter = adapter
-        suggestionsRecyclerView.layoutManager = LinearLayoutManager(this)
+
 
         // Gestion du clic sur l'icône retour dans le conteneur des détails
         backIconRoute.setOnClickListener {
@@ -218,10 +228,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         startLocationText.setOnClickListener {
             routeDetailsLayout.visibility = View.GONE
             bottomSheetView.visibility = View.GONE
-            suggestionsRecyclerView.visibility = View.VISIBLE
             mapFragmentContainer.visibility = View.GONE
             ui.searchField.visibility = View.VISIBLE
             searchInput.setText(startLocationText.text)
+            searchInput.setHint("Entrez le lieu de depart")
             isRouteBack = 1
         }
         // Clic sur les champs le champ de depart
@@ -231,6 +241,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             suggestionsRecyclerView.visibility = View.VISIBLE
             mapFragmentContainer.visibility = View.GONE
             ui.searchField.visibility = View.VISIBLE
+            searchInput.setHint("Entrez votre destination")
             searchInput.setText(destinationText.text)
             isRouteBack = 2
         }
@@ -290,7 +301,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Définir les informations des détails
         if (isRouteBack == 0) {
-            startLocationText.text = "Votre position"
+            startLocationText.text = ""
             destinationText.text = "$suggestion"
         } else if (isRouteBack == 1) {
             startLocationText.text = "$suggestion"

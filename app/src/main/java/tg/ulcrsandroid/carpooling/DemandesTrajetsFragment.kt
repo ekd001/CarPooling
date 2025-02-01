@@ -15,11 +15,16 @@ import tg.ulcrsandroid.carpooling.databinding.FragmentDemandesTrajetsBinding
 class DemandesTrajetsFragment : Fragment() {
     private var _ui: FragmentDemandesTrajetsBinding? = null
     private val ui get() = _ui!!
+    private var adapter = DemandesTrajetsAdapter(
+        getSampleData(),
+        onItemClick = { _, _ -> },
+        onDeleteClick = { _, _ -> }
+    )
 
     lateinit var demandesTrajetsRecyclerView: RecyclerView
 
     private val demandesTrajets = getSampleData()
-    private var adapter = DemandesTrajetsAdapter(getSampleData()) { demandesTrajets, position ->}
+
 
     // Interface pour partager l'adaptateur
     interface OnAdapterSharedListener {
@@ -61,30 +66,46 @@ class DemandesTrajetsFragment : Fragment() {
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
         toolbar.setTitleTextAppearance(requireContext(), R.style.CustomToolbarStyle)
-        toolbar.title = "Demandes"
+
 
         // Configurer le RecyclerView
         ui.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Créer et définir l'adaptateur
-        adapter = DemandesTrajetsAdapter(demandesTrajets) { demandeTrajet, position ->
-            val bundle = Bundle().apply {
-                putParcelable("demandeTrajet", demandeTrajet)
-                putInt("position", position)
+        adapter = DemandesTrajetsAdapter(
+            getSampleData(),
+            onItemClick = { demandeTrajet, position ->
+                // Action lorsqu'on clique sur l'élément
+                val bundle = Bundle().apply {
+                    putParcelable("demandeTrajet", demandeTrajet)
+                    putInt("position", position)
+                }
+                val fragment = DemandeDetailsFragment().apply {
+                    arguments = bundle
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            },
+            onDeleteClick = { demandeTrajet, position ->
+                val bundle = Bundle().apply {
+                    putParcelable("nomPassager", demandeTrajet)
+                    putInt("position", position)
+                }
+                val fragment = ChatFragment().apply {
+                    arguments = bundle
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
-            val fragment = DemandeDetailsFragment().apply {
-                arguments = bundle
-            }
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit()
-        }
+        )
         ui.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         ui.recyclerView.adapter = adapter
 
-        adapterSharedListener?.getAdapter()?.let {
-        }
+        adapterSharedListener?.getAdapter()?.let {}
     }
 
     private fun getSampleData(): MutableList<DemandesTrajets> {

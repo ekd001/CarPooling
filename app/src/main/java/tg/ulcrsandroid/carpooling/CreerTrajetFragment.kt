@@ -109,7 +109,7 @@ class CreerTrajetFragment : Fragment() {
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
 
-            val timePicker = TimePickerDialog(requireContext(), R.style.CustomDialogStyle               , { _, selectedHour, selectedMinute ->
+            val timePicker = TimePickerDialog(requireContext(), R.style.CustomDialogStyle , { _, selectedHour, selectedMinute ->
                 val time = String.format("%02d:%02d", selectedHour, selectedMinute)
                 ui.timeEditText.setText(time) // Affiche l'heure sélectionnée dans l'EditText
             }, hour, minute, true)
