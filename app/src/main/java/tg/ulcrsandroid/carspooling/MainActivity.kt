@@ -4,20 +4,25 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.Manifest
+import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -32,15 +37,22 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import tg.ulcrsandroid.carspooling.core.models.ReservationModel
 import tg.ulcrsandroid.carspooling.core.utils.Constants
+import tg.ulcrsandroid.carspooling.core.utils.GlobalUser
+import tg.ulcrsandroid.carspooling.core.utils.ReservationStatus
 import tg.ulcrsandroid.carspooling.databinding.ActivityMainBinding
+import tg.ulcrsandroid.carspooling.features.ridemanagement.viewModel.RideMgmtViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var ui: ActivityMainBinding
     private lateinit var googleMap: GoogleMap
     private lateinit var mapFragment: Fragment
     lateinit var searchIcon: ImageView
-    lateinit var searchInput: EditText
+    lateinit var searchInput: AutoCompleteTextView
     lateinit var bottomNavigation: BottomNavigationView
     lateinit var suggestionsRecyclerView: RecyclerView
     private lateinit var routeDetailsLayout: View
@@ -55,6 +67,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val initiallyVisibleViews = mutableSetOf<View>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var isRouteBack = 0
+    private lateinit var rideMgmtViewModel: RideMgmtViewModel
+
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 100
@@ -64,6 +78,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         ui = ActivityMainBinding.inflate(layoutInflater)
         setContentView(ui.root)
+
+        val application = application as CarSpoolingApplication
+        rideMgmtViewModel = ViewModelProvider(this, application.factoryRideManagement)[RideMgmtViewModel::class.java]
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         Places.initialize(applicationContext, "AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao")
@@ -75,8 +93,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                 )
-        window.statusBarColor = android.graphics.Color.TRANSPARENT
-        window.navigationBarColor = android.graphics.Color.WHITE
+        window.statusBarColor = Color.TRANSPARENT
 
         // Liaison avec les éléments de l'UI
         bottomNavigation = ui.bottomNavigation
@@ -100,18 +117,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                                     or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                             )
-                    window.statusBarColor = android.graphics.Color.TRANSPARENT
+                    window.statusBarColor = Color.TRANSPARENT
                     homeContainer.visibility = View.VISIBLE
                     fragmentContainer.visibility = View.GONE
                     supportFragmentManager.popBackStack()
                     true
                 }
                 R.id.nav_reserve -> {
-                    //showFragment(ReservationFragment())
-                    true
-                }
-                R.id.nav_notif -> {
-                    //showFragment(ReservationFragment())
+                    window.decorView.systemUiVisibility = (
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                            )
+                    window.statusBarColor = ContextCompat.getColor(this, R.color.mainColor)
+                    homeContainer.visibility = View.GONE
+                    fragmentContainer.visibility = View.VISIBLE
+                    openFragment(ReservationFragment())
                     true
                 }
                 R.id.nav_profile -> {
@@ -194,28 +214,77 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 // Changer l'icône lorsque l'EditText est sélectionné
                 searchIcon.setImageResource(R.drawable.back_icon)
                 isActiveIcon = true
-                mapFragmentContainer.visibility = View.GONE
-                bottomNavigation.visibility = View.GONE
-                suggestionsRecyclerView.visibility = View.VISIBLE
+                ui.searchField.visibility = View.GONE
+                showRouteDetailsLayout("")
             } else {
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }
 
-        // Suggestions fictives
-        val suggestions = listOf("Paris", "London", "New York", "Tokyo", "Berlin")
 
-        // Configurer l'adapter pour les suggestions
-        val adapter = SuggestionsAdapter(suggestions) { suggestion ->
-            // Lorsqu'une suggestion est sélectionnée
+
+        val adapterDepart = ArrayAdapter(this, R.layout.item_suggestion_recherche, lieux)
+        searchInput.setAdapter(adapterDepart)
+        searchInput.setDropDownVerticalOffset(30)
+        searchInput.threshold = 1
+        searchInput.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // Filtre les suggestions en fonction de l'entrée
+                val filteredSuggestions = lieux.filter { it.startsWith(s.toString(), ignoreCase = true) }
+                val filteredAdapter = ArrayAdapter(searchInput.context, R.layout.item_suggestion_recherche, filteredSuggestions)
+                searchInput.setAdapter(filteredAdapter)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+        searchInput.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            searchInput.setText(selectedItem)
             ui.searchField.visibility = View.GONE
+
+            val depart = startLocationText.text.toString()
+            val destination = destinationText.text.toString()
+
+            Log.i("MainActivity", "Depart: $depart")
+            Log.i("MainActivity", "Destination: $destination")
+            val trajetTrouvesadapter = TrajetsTrouvesAdapter {trajet ->
+                Log.i("MainActivity", "Bouton reservation est clické")
+                trajet.hoursRide?.let {
+                    trajet.departure?.let { it1 ->
+                        trajet.arrival?.let { it2 ->
+                            showConfirmationDialog(trajet.rideId, trajet.driverId,
+                                it, it1, it2, trajet.dateRide
+                            )
+                        }
+                    }
+                }
+            }
+            ui.trajetsTrouvesRecycler.layoutManager = LinearLayoutManager(this)
+            ui.trajetsTrouvesRecycler.adapter = trajetTrouvesadapter
+
+            if(depart.isNotEmpty() && destination.isNotEmpty()){
+                rideMgmtViewModel.searchRide(depart, destination)
+                Log.i("MainActivity", "Methode executer (searchRide)")
+            }
+
+            rideMgmtViewModel.rides.observe(this) { rideList ->
+                if(rideList.isNotEmpty()){
+                    ui.nonTrouves.visibility = View.GONE
+                    ui.trouves.visibility = View.VISIBLE
+                    trajetTrouvesadapter.submitList(rideList)
+                }else{
+                    ui.nonTrouves.visibility = View.VISIBLE
+                    ui.trouves.visibility = View.GONE
+                }
+
+            }
+
             bottomSheetView.visibility = View.VISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            showRouteDetailsLayout(suggestion)
+            showRouteDetailsLayout(selectedItem)
         }
-        suggestionsRecyclerView.adapter = adapter
-        suggestionsRecyclerView.layoutManager = LinearLayoutManager(this)
 
         // Gestion du clic sur l'icône retour dans le conteneur des détails
         backIconRoute.setOnClickListener {
@@ -235,16 +304,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             mapFragmentContainer.visibility = View.GONE
             ui.searchField.visibility = View.VISIBLE
             searchInput.setText(startLocationText.text)
+            searchInput.setHint("Entrez le lieu de depart")
             isRouteBack = 1
         }
         // Clic sur les champs le champ de depart
         destinationText.setOnClickListener {
             routeDetailsLayout.visibility = View.GONE
             bottomSheetView.visibility = View.GONE
-            suggestionsRecyclerView.visibility = View.VISIBLE
             mapFragmentContainer.visibility = View.GONE
             ui.searchField.visibility = View.VISIBLE
             searchInput.setText(destinationText.text)
+            searchInput.setHint("Entrez votre destination")
             isRouteBack = 2
         }
 
@@ -284,11 +354,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
         // Configurer RecyclerView
-        val trajets = getDummyData()
+
         // Instanciez l'adaptateur avec les données
-        val TrajetTrouvesadapter = TrajetsTrouvesAdapter(trajets)
-        ui.trajetsTrouvesRecycler.layoutManager = LinearLayoutManager(this)
-        ui.trajetsTrouvesRecycler.adapter = TrajetTrouvesadapter
+
 
     }
 
@@ -303,7 +371,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Définir les informations des détails
         if (isRouteBack == 0) {
-            startLocationText.text = "Votre position"
+            startLocationText.text = ""
             destinationText.text = "$suggestion"
         } else if (isRouteBack == 1) {
             startLocationText.text = "$suggestion"
@@ -409,13 +477,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return (dp * resources.displayMetrics.density).toInt()
     }
 
-    private fun getDummyData(): List<Trajet> {
-        return listOf(
-            Trajet(1, "Paris", "Lyon"),
-            Trajet(2, "Marseille", "Nice"),
-            Trajet(3, "Bordeaux", "Toulouse")
-        )
-    }
 
     fun fetchSuggestions(query: String, callback: (List<String>) -> Unit) {
         val placesClient = Places.createClient(this)
@@ -455,4 +516,43 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .addToBackStack(null) // Ajouter à la pile arrière pour pouvoir revenir
             .commit()
     }
+
+    private fun showConfirmationDialog(rideId: String, driverId: String, hoursRide: String, departure: String,
+                                       arrival: String, date: String?) {
+        AlertDialog.Builder(this) // Remplace "this" par "requireContext()" si dans un Fragment
+            .setTitle("Confirmer la réservation")
+            .setMessage("Êtes-vous sûr de vouloir réserver ce trajet ?")
+            .setPositiveButton("Oui") { dialog, _ ->
+                // Action à effectuer lorsque l'utilisateur confirme
+                val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+                val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+
+                val reservation = GlobalUser.user?.let {
+                    ReservationModel(
+                        date = currentDate,
+                        heure = currentTime,
+                        status = ReservationStatus.WAITING.toString(),
+                        passengerId = it.uid,
+                        rideId = rideId,
+                        rideDeparture = departure,
+                        rideArrival = arrival,
+                        rideHeure = hoursRide,
+                        rideDate = date
+                    )
+                }
+                if (reservation != null) {
+                    rideMgmtViewModel.makeReservation(reservation, driverId)
+                    val fragment = ReservationFragment()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Non") { dialog, _ ->
+                dialog.dismiss() // Ferme la boîte de dialogue
+            }
+        .show()
+        }
 }

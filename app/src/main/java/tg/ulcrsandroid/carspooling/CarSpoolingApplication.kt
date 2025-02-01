@@ -22,6 +22,8 @@ import kotlinx.coroutines.launch
 import tg.ulcrsandroid.carspooling.data.datasource.NotificationRemoteDataSource
 import tg.ulcrsandroid.carspooling.data.repository.notification.NotificationRepository
 import tg.ulcrsandroid.carspooling.domain.usecases.notification.NotificationDemanadReservationUseCase
+import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.GetReservationPassengerUseCase
+import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.ListRideUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.MakereservationUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.UpdateStatusUseCase
 
@@ -78,13 +80,17 @@ class CarSpoolingApplication: Application() {
         val makereservationUseCase = MakereservationUseCase(rideRepository)
         val sendDemandReservationNotificationUseCase = NotificationDemanadReservationUseCase(notificationRepository)
         val updateStatusUseCase = UpdateStatusUseCase(rideRepository)
+        val listRideUseCase: ListRideUseCase = ListRideUseCase(rideRepository)
+        val getReservationPassengerUseCase = GetReservationPassengerUseCase(rideRepository)
         factoryRideManagement = RideMgmtViewModelFactory(
             addRideUseCase,
             deleteRideUseCase,
             searchRideUseCase,
             makereservationUseCase,
             sendDemandReservationNotificationUseCase,
-            updateStatusUseCase
+            updateStatusUseCase,
+            listRideUseCase,
+            getReservationPassengerUseCase
         )
     }
 }

@@ -45,7 +45,7 @@ class DemandeDetailsFragment : Fragment() {
         ui.passager.text = demande.passager
         ui.depart.text = demande.depart
         ui.destination.text = demande.destination
-        ui.distance.text = "${demande.distance}km"
+        ui.heureDepart.text = "${demande.distance}km"
 
         val adapter = (requireActivity() as ConducteurActivity).getAdapter()
 

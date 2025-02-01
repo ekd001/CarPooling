@@ -47,7 +47,8 @@ class ConducteurActivity : AppCompatActivity(), DemandesTrajetsFragment.OnAdapte
                     true
                 }
                 R.id.nav_trajets -> {
-                    //showFragment(ReservationFragment())
+                    fragmentContainer.visibility = View.VISIBLE
+                    openFragment(ConducteurListeTrajetFragment())
                     true
                 }
                 R.id.nav_profile -> {

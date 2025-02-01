@@ -7,9 +7,7 @@ class SearchRideUseCase(private val rideRepository: RideRepository) {
     suspend fun execute(
         departure: String,
         arrival: String,
-        date:String,
-        placeNumber:Int,
         onResult: (List<RideModel>) -> Unit) {
-        rideRepository.search(departure, arrival, date, placeNumber, onResult)
+        rideRepository.search(departure, arrival, onResult)
     }
 }

@@ -100,7 +100,6 @@
                         android:fontFamily="@font/gotham_book"
                         android:paddingStart="10dp"
                         android:layout_marginBottom="10dp"
-                        android:text="Start Location"
                         android:textSize="16sp"
                         android:textColor="@color/mainColor"
                         android:ellipsize="end"
@@ -145,12 +144,12 @@
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/google_maps_icon" />
 
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/searchInput"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/rechercher_un_endroit"
+                    android:hint="Rechercher un trajet"
                     android:fontFamily="@font/gotham_book"
                     android:textSize="16sp"
                     android:paddingStart="10dp"
@@ -191,22 +190,47 @@
                     android:src="@drawable/bottom_sheet_bar" />
 
                 <TextView
+                    android:id="@+id/nonTrouves"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="8dp"
                     android:layout_marginTop="16dp"
                     android:paddingBottom="8dp"
-                    android:text="Trajets diponibles"
+                    android:text="Aucun trajet disponibles pour cette destination"
+                    android:fontFamily="@font/gotham_medium"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:gravity="center" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/trajetsTrouvesRecycler"
+                <LinearLayout
+                    android:id="@+id/trouves"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:padding="5dp" />
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:elevation="16dp"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:layout_marginTop="16dp"
+                        android:paddingBottom="8dp"
+                        android:fontFamily="@font/gotham_medium"
+                        android:text="Trajets disponibles"
+                        android:textStyle="bold"
+                        android:textSize="19sp"
+                        android:gravity="center" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/trajetsTrouvesRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/item_trajet_trouve"
+                        android:padding="5dp" />
+                </LinearLayout>
             </LinearLayout>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -226,6 +250,10 @@
         android:layout_height="62dp"
         app:menu="@menu/bottom_nav_menu"
         style="@style/BottomNavigationViewStyle"
+        android:background="@color/mainColor"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        app:itemActiveIndicatorStyle="@color/red"
         android:layout_gravity="bottom" />
 
 </LinearLayout>

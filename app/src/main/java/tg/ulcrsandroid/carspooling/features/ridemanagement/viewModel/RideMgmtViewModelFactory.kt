@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import tg.ulcrsandroid.carspooling.domain.usecases.notification.NotificationDemanadReservationUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.AddRideUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.DeleteRideUseCase
+import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.GetReservationPassengerUseCase
+import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.ListRideUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.MakereservationUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.SearchRideUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.UpdateStatusUseCase
@@ -15,7 +17,9 @@ class RideMgmtViewModelFactory(
     private val searchRideUseCase: SearchRideUseCase,
     private val makereservationUseCase: MakereservationUseCase,
     private val sendDemandReservationNotificationUseCase: NotificationDemanadReservationUseCase,
-    private val updateStatusUseCase: UpdateStatusUseCase
+    private val updateStatusUseCase: UpdateStatusUseCase,
+    private val listRideUseCase: ListRideUseCase,
+    private val getReservationPassengerUseCase: GetReservationPassengerUseCase
 ):ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if(modelClass.isAssignableFrom(RideMgmtViewModel::class.java)){
@@ -25,7 +29,9 @@ class RideMgmtViewModelFactory(
                 searchRideUseCase,
                 makereservationUseCase,
                 sendDemandReservationNotificationUseCase,
-                updateStatusUseCase) as T
+                updateStatusUseCase,
+                listRideUseCase,
+                getReservationPassengerUseCase) as T
         } else {
             throw IllegalArgumentException("Not RideMgmtViewModel class")
         }

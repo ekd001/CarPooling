@@ -28,11 +28,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal">
-        <!-- Photo de profil -->
+            <!-- Photo de profil -->
             <ImageView
                 android:id="@+id/profilePicture"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:src="@drawable/profil_icon"
                 android:layout_marginBottom="16dp"
                 android:scaleType="centerCrop" />
@@ -59,6 +59,7 @@
                 android:id="@+id/usernameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Manawa"
                 android:fontFamily="@font/gotham_medium"
                 android:textSize="18sp"
                 android:layout_marginBottom="8dp"
@@ -87,6 +88,7 @@
                 android:id="@+id/emailText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="email@example.com"
                 android:fontFamily="@font/gotham_medium"
                 android:textSize="18sp"
                 android:layout_marginBottom="8dp"
@@ -113,8 +115,9 @@
 
             <TextView
                 android:id="@+id/permisText"
-                android:layout_width="160dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Aucun"
                 android:fontFamily="@font/gotham_medium"
                 android:textSize="18sp"
                 android:layout_marginBottom="8dp"

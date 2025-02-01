@@ -18,8 +18,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
+import tg.ulcrsandroid.carspooling.core.models.RideModel
+import tg.ulcrsandroid.carspooling.core.utils.GlobalUser
 import tg.ulcrsandroid.carspooling.databinding.FragmentDemandesTrajetsBinding
 import tg.ulcrsandroid.carspooling.databinding.FragmentCreerTrajetBinding
+import tg.ulcrsandroid.carspooling.features.ridemanagement.viewModel.RideMgmtViewModel
 
 
 val lieux = listOf(
@@ -36,6 +40,7 @@ val lieux = listOf(
 )
 class CreerTrajetFragment : Fragment() {
     private var _ui: FragmentCreerTrajetBinding? = null
+    private lateinit var rideMgmtViewModel: RideMgmtViewModel
     private val ui get() = _ui!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +53,19 @@ class CreerTrajetFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _ui = FragmentCreerTrajetBinding.inflate(inflater, container, false)
+        val application = requireActivity().application as CarSpoolingApplication
+        rideMgmtViewModel = ViewModelProvider(
+            this,
+            application.factoryRideManagement
+        )[RideMgmtViewModel::class.java]
+
+        rideMgmtViewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            message?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                rideMgmtViewModel.clearToastMessage()
+            }
+        }
+
         return ui.root
     }
 
@@ -139,9 +157,23 @@ class CreerTrajetFragment : Fragment() {
             val destination = ui.destinationInput.text
             val date = ui.dateEditText.text
             val heure = ui.timeEditText.text
+            val prix = ui.priceEditText.text
             val placesDisponibles = ui.numberSpinner.selectedItem.toString()
-            // TODO
 
+            val rideModel = GlobalUser.user?.let { it1 ->
+                RideModel(
+                    driverId = it1.uid,
+                    departure = lieuDepart.toString(),
+                    arrival = destination.toString(),
+                    dateRide = date.toString(),
+                    hoursRide = heure.toString(),
+                    price = prix.toString().toDouble(),
+                    placeNumber = placesDisponibles.toInt()
+                )
+            }
+            if (rideModel != null) {
+                rideMgmtViewModel.addRide(rideModel)
+            }
             Toast.makeText(requireContext(), "Trajet ajouté", Toast.LENGTH_SHORT).show()
         }
 

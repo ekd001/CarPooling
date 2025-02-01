@@ -1,6 +1,8 @@
 package tg.ulcrsandroid.carspooling.features.ridemanagement.viewModel
 
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +14,8 @@ import tg.ulcrsandroid.carspooling.core.utils.Constants
 import tg.ulcrsandroid.carspooling.domain.usecases.notification.NotificationDemanadReservationUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.AddRideUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.DeleteRideUseCase
+import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.GetReservationPassengerUseCase
+import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.ListRideUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.MakereservationUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.SearchRideUseCase
 import tg.ulcrsandroid.carspooling.domain.usecases.rideManagement.UpdateStatusUseCase
@@ -22,20 +26,29 @@ class RideMgmtViewModel(
     private val searchRideUseCase: SearchRideUseCase,
     private val makereservationUseCase: MakereservationUseCase,
     private val sendDemandReservationNotificationUseCase: NotificationDemanadReservationUseCase,
-    private val updateStatusUseCase: UpdateStatusUseCase
+    private val updateStatusUseCase: UpdateStatusUseCase,
+    private val listRideUseCase: ListRideUseCase,
+    private val getReservationPassengerUseCase: GetReservationPassengerUseCase
 ) : ViewModel() {
     private val _rides = MutableLiveData<List<RideModel>>()
     val rides: LiveData<List<RideModel>> get() = _rides
+    private val _reservations = MutableLiveData<List<ReservationModel>>()
+    val reservations: LiveData<List<ReservationModel>> get() = _reservations
     val error = MutableLiveData<String?>()
 
-    fun addRide(rideModel: RideModel){
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: MutableLiveData<String?> get() = _toastMessage
+
+    fun addRide(rideModel: RideModel) {
         viewModelScope.launch {
             try {
                 addRideUseCase.execute(rideModel){result ->
                     if(result){
                         Log.i(Constants.TAG_STORAGE, "Ride is saved successfuly!")
+                        _toastMessage.postValue("Trajet sauvegardé avec succès!")
                     } else {
                         Log.i(Constants.TAG_STORAGE, "Ride is not saved!")
+                        _toastMessage.postValue("Echec de sauvegarde de trajet!")
                     }
                 }
             } catch (e:Exception){
@@ -60,11 +73,11 @@ class RideMgmtViewModel(
         }
     }
 
-    fun searchRide(departure: String, arrival:String, date:String, placeNumber:Int) {
+    fun searchRide(departure: String, arrival:String) {
         var riders = listOf<RideModel>()
         viewModelScope.launch {
             try {
-                searchRideUseCase.execute(departure,arrival,date,placeNumber){rideList ->
+                searchRideUseCase.execute(departure,arrival){rideList ->
                     if(rideList.isNotEmpty()){
                         Log.i(Constants.TAG_STORAGE, "List of ride ${rideList.size}")
                         _rides.postValue(rideList)
@@ -119,4 +132,47 @@ class RideMgmtViewModel(
             }
 
         }
-}   }
+
+    }
+
+    fun getlistRide(driverId: String) {
+        viewModelScope.launch {
+            try {
+                listRideUseCase.execute(driverId){rideList ->
+                    if(rideList.isNotEmpty()){
+                        Log.i(Constants.TAG_STORAGE, "List of ride ${rideList.size}")
+                        _rides.postValue(rideList)
+                    }else{
+                        Log.i(Constants.TAG_STORAGE, "List of ride is empty!")
+                        _rides.postValue(emptyList())
+                    }
+                }
+            }catch (e:Exception){
+                error.value = e.message
+            }
+        }
+    }
+
+    fun getReservationPassenger(passengerId: String) {
+        viewModelScope.launch {
+            try {
+                getReservationPassengerUseCase.execute(passengerId) { reservationList ->
+                    if (reservationList.isNotEmpty()) {
+                        Log.i(Constants.TAG_STORAGE, "List of reservation ${reservationList.size}")
+                        _reservations.postValue(reservationList)
+                    } else {
+                        Log.i(Constants.TAG_STORAGE, "List is empty")
+                        _reservations.postValue(emptyList())
+                    }
+                }
+            }catch (e:Exception){
+                error.value = e.message
+            }
+        }
+    }
+
+    fun clearToastMessage() {
+        _toastMessage.value = null
+    }
+}
+

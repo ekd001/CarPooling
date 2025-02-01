@@ -9,4 +9,5 @@
     <color name="container">#A1ABBE</color>
     <color name="red">#FF0000</color>
     <color name="green">#41A027</color>
+    <color name="confirmed">#41A027</color>
 </resources>

@@ -83,6 +83,7 @@ class AuthViewModel(
                             Log.i(Constants.TAG_AUTH, "User token global : ${token}")
                             Log.i(Constants.TAG_AUTH, "User global : ${GlobalUser.user}")
 
+                            GlobalUser.setUser(loggedInUser)
                             OneSignal.setExternalUserId(loggedInUser.uid)
                             val deviceState = OneSignal.getDeviceState()
                             val playerId = deviceState?.userId

@@ -1,3 +1,4 @@
+
 package tg.ulcrsandroid.carspooling
 
 import android.os.Parcel
@@ -54,15 +55,18 @@ data class DemandesTrajets(
 }
 
 class DemandesTrajetsAdapter(private val demandesTrajets: List<DemandesTrajets>,
-                             private val onItemClick: (DemandesTrajets, Int) -> Unit
+                             private val onItemClick: (DemandesTrajets, Int) -> Unit,
+                             private val onDeleteClick: (DemandesTrajets, Int) -> Unit
 ) : RecyclerView.Adapter<DemandesTrajetsAdapter.DemandesTrajetsViewHolder>()   {
 
     inner class DemandesTrajetsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val passager: TextView = itemView.findViewById(R.id.passager)
         val trajet: TextView = itemView.findViewById(R.id.trajet)
-        val distance: TextView = itemView.findViewById(R.id.distance)
+        val heure: TextView = itemView.findViewById(R.id.heure)
+        val date: TextView = itemView.findViewById(R.id.date)
         val etatIcon: ImageView  = itemView.findViewById(R.id.etat_icon)
         val clicView: LinearLayout = itemView.findViewById(R.id.clic_container)
+        val chaticon: ImageView = itemView.findViewById(R.id.chat_icon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DemandesTrajetsViewHolder {
@@ -74,7 +78,8 @@ class DemandesTrajetsAdapter(private val demandesTrajets: List<DemandesTrajets>,
         val demandeTrajet = demandesTrajets[position]
         holder.passager.text = demandeTrajet.passager
         holder.trajet.text = "${demandeTrajet.depart} - ${demandeTrajet.destination}"
-        holder.distance.text = "${demandeTrajet.distance}km"
+        holder.heure.text = "${demandeTrajet.distance}km"
+        holder.date.text = "${demandeTrajet.distance}km"
 
         when (demandeTrajet.etat) {
             1 -> holder.etatIcon.setImageResource(R.drawable.checked_icon)
@@ -95,6 +100,10 @@ class DemandesTrajetsAdapter(private val demandesTrajets: List<DemandesTrajets>,
             if (demandeTrajet.etat == 0) { // Ne permettre le clic que si l'état est 0 (en attente)
                 onItemClick(demandeTrajet, position)
             }
+        }
+
+        holder.chaticon.setOnClickListener {
+            onDeleteClick(demandeTrajet, position)
         }
     }
 

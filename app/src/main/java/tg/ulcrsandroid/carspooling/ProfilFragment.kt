@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
 import tg.ulcrsandroid.carspooling.core.utils.Constants
+import tg.ulcrsandroid.carspooling.core.utils.GlobalUser
 import tg.ulcrsandroid.carspooling.databinding.FragmentProfilBinding
 import kotlin.properties.Delegates
 
@@ -104,9 +105,9 @@ class ProfilFragment : Fragment() {
         usernameText = view.findViewById(R.id.usernameText)
         emailText = view.findViewById(R.id.emailText)
         carLicenseNumberText = view.findViewById(R.id.permisText)
-        usernameText.text = username
-        emailText.text = email
-        carLicenseNumberText.text = "carLicenseNumber"
+        usernameText.text = GlobalUser.user?.displayName
+        emailText.text = GlobalUser.user?.email
+        carLicenseNumberText.text = GlobalUser.user?.carLicenseNumber
         println(ui.permisText.text)
         // Activer le menu dans le fragment
         setHasOptionsMenu(true)

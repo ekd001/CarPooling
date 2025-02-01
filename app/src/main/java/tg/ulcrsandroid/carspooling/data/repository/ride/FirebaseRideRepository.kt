@@ -37,12 +37,10 @@ class FirebaseRideRepository(db: FirebaseFirestore) : RideRepository {
         }
     }
 
-    override suspend fun search(departure: String, arrival: String,date:String,placeNumber:Int,onResult: (List<RideModel>) -> Unit) {
+    override suspend fun search(departure: String, arrival: String,onResult: (List<RideModel>) -> Unit) {
         return try {
             val querySnapshot = db.collection("rides").whereEqualTo("departure", departure)
                 .whereEqualTo("arrival", arrival)
-                .whereEqualTo("dateRide", date)
-                .whereGreaterThanOrEqualTo("placeNumber", placeNumber)
                 .get()
                 .await() // await pour attendre les résultats de la requête
 
@@ -75,6 +73,33 @@ class FirebaseRideRepository(db: FirebaseFirestore) : RideRepository {
             onResult(true)
         } catch (e: Exception) {
             onResult(false)
+        }
+    }
+
+    override suspend fun getRide(driverId: String, onResult: (List<RideModel>) -> Unit) {
+        return try {
+            val querySnapshot = db.collection("rides").whereEqualTo("driverId", driverId).get().await()
+            val rides = querySnapshot.documents.mapNotNull { document ->
+                document.toObject(RideModel::class.java)
+            }
+            onResult(rides)
+        } catch (e: Exception) {
+            onResult(emptyList())
+        }
+    }
+
+    override suspend fun getReservationPassenger(
+        passengerId: String,
+        onResult: (List<ReservationModel>) -> Unit
+    ) {
+        return try {
+            val querySnapshot = db.collection("reservations").whereEqualTo("passengerId", passengerId).get().await()
+            val reservations = querySnapshot.documents.mapNotNull { document ->
+                document.toObject(ReservationModel::class.java)
+            }
+            onResult(reservations)
+        } catch (e: Exception) {
+            onResult(emptyList())
         }
     }
 }
